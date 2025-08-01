@@ -1,26 +1,29 @@
 class Solution {
     public int coinChange(int[] coins, int amount) {
-        
-        Arrays.sort(coins);
-        int i=coins.length-1;
-        int ans =0;
-        while(i>=0){
-          int amt= amount/coins[i];
-          if(amt!=0){
-          ans+=amt;
-          amount= amount%coins[i];
-          i--;
-         
-          }
-          else{
-              if(amount==0)
-                 break;
+        int n = coins.length;
+        int[][] dp = new int[n][amount+1];
+        for(int[] arr : dp){
+            Arrays.fill(arr,-1);
+        }
+        return rec(n-1,amount,coins,dp)>=(int)1e9?-1:rec(n-1,amount,coins,dp);
+    }
+    int rec(int i , int amount,int[] coins,int[][] dp){
+       
+        if(i==0){
+            if(amount%coins[0]==0)
+             return amount/coins[0] ;
 
-             i--;
-          }
+             return (int)1e9;
         }
-          return amount==0?ans:-1;
-         
-        }
+        if(dp[i][amount]!=-1)
+         return dp[i][amount];
+        int take =(int)1e9;
+        if(coins[i]<=amount)
+         take = 1 + rec(i,amount-coins[i],coins,dp);
+
+         int non = rec(i-1,amount,coins,dp);
+     dp[i][amount]= Math.min(take,non);
+         return Math.min(take,non);
+    }
     
 }
