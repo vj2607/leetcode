@@ -1,40 +1,42 @@
 class Solution {
     public boolean isMatch(String s, String p) {
-      int n = s.length() , m =p.length();
-       int[][] dp = new int[n+1][m+1];
-       return rec(0,0,n,m,s,p,dp);
+      int[][] dp = new int[s.length()][p.length()];
+      
+      return rec(s.length()-1,p.length()-1,s,p,dp);
     }
 
-    boolean rec(int i , int j, int n , int m , String s , String p,int[][] dp){
-         if(j>m-1 && i<n){
-            return false;
-         }
-         if(i>n-1 && j>m-1)
-          return true;
+    boolean rec(int i ,int j,String s , String p ,int[][] dp ){
 
-        if(i>n-1 && j<m){
-            for(int k=j;k<m;k++)
-             if(p.charAt(k)!='*')
-               return false;
-
-               return true;
+        if(i<0 && j<0){
+            return true; 
         }
+        if(i<0){
+            for(int k=j;k>=0;k--){
+                if(p.charAt(k)!='*')
+                 return false;
+            }
+            return true;
+        }
+        if(j<0)
+        return false;
+
         if(dp[i][j]!=0)
          return dp[i][j]==1?true:false;
 
         if(s.charAt(i)==p.charAt(j) || p.charAt(j)=='?'){
-            boolean ans =rec(i+1,j+1,n,m,s,p,dp);
-            dp[i][j] = ans==true?1:-1;
-            return ans;
-
+            boolean res =  rec(i-1,j-1,s,p,dp);
+            dp[i][j]= res==true?1:-1;
+          return res;
         }
+     
         if(p.charAt(j)=='*'){
-            boolean ans = rec(i+1,j,n,m,s,p,dp) || rec(i,j+1,n,m,s,p,dp);
-              dp[i][j] = ans==true?1:-1;
-            return ans;
+            boolean res= rec(i,j-1,s,p,dp) || rec(i-1,j,s,p,dp);
+              dp[i][j]= res==true?1:-1;
+          return res;
         }
 
         dp[i][j]=-1;
         return false;
+
     }
 }
