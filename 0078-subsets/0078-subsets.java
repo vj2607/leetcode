@@ -1,23 +1,18 @@
 class Solution {
     public List<List<Integer>> subsets(int[] nums) {
-        
+        int n = nums.length;
+        int subset=1<<n;
         List<List<Integer>> ans = new ArrayList<>();
 
-        List<Integer> list = new ArrayList<>();
-
-        getSubSet(0, nums,ans,list);
+        for(int i =0;i<subset;i++){
+            List<Integer> temp = new ArrayList<>();
+            for(int j=0;j<n;j++){
+                if((i &(1<<j)) !=0 )
+                temp.add(nums[j]);
+            }
+            ans.add(new ArrayList<>(temp));
+        }
 
         return ans;
-    }
-
-    void getSubSet(int i,int[] nums, List<List<Integer>> ans, List<Integer> list){
-         if(i>=nums.length){
-            ans.add(new ArrayList<>(list));
-            return ;
-         }
-         list.add(nums[i]);
-         getSubSet(i+1,nums,ans,list);
-         list.remove(list.size()-1);
-         getSubSet(i+1,nums,ans,list);
     }
 }
