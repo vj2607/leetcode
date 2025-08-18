@@ -1,17 +1,12 @@
 class Solution {
     public int singleNumber(int[] nums) {
-        int ans =0;
-        for(int bit=0;bit<32;bit++){
-             int count=0;
-            for(int i=0;i<nums.length;i++){
-                 if((nums[i] &(1<<bit)) !=0)
-                 count++;
-            }
-            if(count%3==1){
-                ans = ans| (1<<bit);
-            }
+        int ones =0 ,twos=0;
+
+        for(int i=0;i<nums.length;i++){
+          ones = (ones^nums[i]) & ~twos;
+          twos =(twos^nums[i]) & ~ones;
         }
 
-        return ans;
+        return ones;
     }
 }
