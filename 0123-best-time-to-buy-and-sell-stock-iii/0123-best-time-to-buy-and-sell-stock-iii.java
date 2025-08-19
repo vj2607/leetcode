@@ -6,7 +6,7 @@ class Solution {
     }
 
     int rec(int i,int buy,int[] nums,int trans,Integer map[][][]  ){
-            if(i==nums.length){
+            if(i==nums.length || trans==2){
                 return 0;
             }
         
@@ -14,14 +14,14 @@ class Solution {
         if(map[i][buy][trans]!=null)
             return map[i][buy][trans];
         int profit=0;
-        if(trans<2){
+       
         if(buy==1){
             profit=Math.max(-nums[i]+rec(i+1,0,nums,trans,map),rec(i+1,1,nums,trans,map));
         }
         else{
           profit=Math.max(nums[i]+rec(i+1,1,nums,trans+1,map),rec(i+1,0,nums,trans,map));  
         }
-        }
+     
       
         return map[i][buy][trans]= profit;
     }
