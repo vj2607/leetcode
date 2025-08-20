@@ -1,25 +1,26 @@
 class Solution {
     public int maxProfit(int[] prices) {
         int n = prices.length;
-        int dp[][] = new int[n][2];
-        for(int[] arr :dp)
-        Arrays.fill(arr,-1);
-      return rec(0,1,prices,dp);
+      
+       int curr1=0,curr2=0, down=0,diag=0;
+       for(int i=n-1;i>=0;i--){
+        for(int j=0;j<2;j++){
+            int profit=0;
+            if(j==1){
+  profit = Math.max(-prices[i]+down,diag);
+             curr2=profit; 
+            }
+            else{
+        profit = Math.max(prices[i]+diag,down);     
+        curr1=profit;   
+            }
+           
+        }
+          down=curr1;
+          diag=curr2;
+       }
+      return diag;
     }
 
-    int rec(int i, int buy, int[] nums,int[][] dp){
-        if(i==nums.length)
-          return 0;
-          if(dp[i][buy]!=-1)
-           return dp[i][buy];
-  int profit=0;
-        if(buy==1){
-           profit=Math.max(-nums[i] +rec(i+1,0,nums,dp),rec(i+1,1,nums,dp));
-        }
-        else{
-            profit=Math.max(nums[i]+rec(i+1,1,nums,dp),rec(i+1,0,nums,dp));
-        }
-
-        return dp[i][buy]=profit;
-    }
+   
 }
