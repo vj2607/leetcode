@@ -1,6 +1,6 @@
 class RandomizedCollection {
 
-   HashMap<Integer,List<Integer>> map ;
+   HashMap<Integer,HashSet<Integer>> map ;
     List<Integer> list ;
     Random random;
 
@@ -11,40 +11,35 @@ class RandomizedCollection {
     }
     
     public boolean insert(int val) {
-        if(map.containsKey(val)){
-         map.get(val).add(list.size());
-         list.add(val);
-         return false;
-        }
-        map.put(val, new ArrayList<>());
-        map.get(val).add(list.size());   // add the current index
-         list.add(val);
-         return true;
+       boolean notPresent = !map.containsKey(val);
+       map.computeIfAbsent(val, v-> new HashSet<>()).add(list.size());
+       list.add(val);
+       return notPresent;
     }
     
     public boolean remove(int val) {
-        if(!map.containsKey(val)){  
+        if(!map.containsKey(val) || map.get(val).size()==0){  
          return false;
         }
-        List<Integer> idxList =   map.get(val);
-        
-        int idxToRemove = idxList.get(idxList.size()-1);
-        int last = list.get(list.size()-1);
-        if(list.get(idxToRemove)!=last){
-       List<Integer> lastIdxList = map.get(last);
-       lastIdxList.remove(lastIdxList.size()-1);
-       lastIdxList.add(idxToRemove);
-        list.set(idxToRemove,last);
-        list.remove(list.size()-1);
-         idxList.remove(idxList.size()-1);
+         int  idxToRemove = map.get(val).iterator().next();
+         map.get(val).remove(idxToRemove);
+         
+         int lastIdx = list.size()-1;
+         int lastVal= list.get(lastIdx);
+         if(idxToRemove !=lastIdx){
+            list.set(idxToRemove,lastVal);
+            map.get(lastVal).remove(lastIdx);
+            map.get(lastVal).add(idxToRemove);
+
+         }
+
+          list.remove(lastIdx);
+          if (map.get(val).isEmpty()) {
+            map.remove(val);
         }
-       else{
-          idxList.remove(idxList.size()-1);
-           list.remove(list.size()-1);
-           if(idxList.size()==0)
-           map.remove(val);
-       }
-       
+
+
+
         return true;
     }
 
