@@ -1,48 +1,59 @@
 class Solution {
     public int reversePairs(int[] nums) {
-      int[] count = new int[1];
-      mergeSort(nums,0,nums.length-1,count);
-      return  count[0];
+        
+        return mergeSort(nums,0,nums.length-1);
     }
-    void mergeSort(int[] nums, int low , int high, int[] count){
-        if(low>=high){
-            return;
-        }
-        int mid=(low+high)/2;
-        mergeSort(nums,low,mid,count);
-        mergeSort(nums,mid+1,high,count);
-        merge(nums,low,mid,high,count);
-    }
-    void merge(int[] nums, int low , int mid,int high, int[] count){
-        int i =low;
-        int j =mid+1;
-        int[] temp = new int[high-low+1];
-        int idx=0;
-        int ed =mid+1;
-        for(int st=low;st<=mid;st++){
-           while(ed<=high && (long)nums[st]>2L*nums[ed])
-             ed++;
 
-             count[0]+=ed-(mid+1);
+    int mergeSort(int[] arr,int l , int r){
+       
+        if(l>=r)
+          return 0;
+           int count =0;
+          int mid = (l+r)/2;
+         count+= mergeSort(arr,l,mid);
+         count+=  mergeSort(arr,mid+1,r);
+         count+= merge(arr,l,r,mid);
+
+         return count;
+    }
+
+    int merge(int[] arr, int l , int r, int mid){
+        ArrayList<Integer> temp = new ArrayList<>();
+        int left=l;
+        int right=mid+1;
+        int count=0;
+        int ed= mid+1;
+        for(int st=left;st<=mid;st++){
+            while(ed<=r && (long)arr[st] > 2L*arr[ed])
+              ed++;
+
+              count+=ed-(mid+1);
         }
-        while(i<=mid && j<=high){
-            if(nums[i]>nums[j]){
-             
-                temp[idx++]=nums[j++];        
+        while(left<=mid && right<=r){
+            if(arr[left]<=arr[right]){
+                temp.add(arr[left]);
+                left++;
             }
             else{
-                temp[idx++]=nums[i++];
+                temp.add(arr[right]);
+             
+                right++;
             }
         }
-        while(i<=mid){
-            temp[idx++]=nums[i++];
+        while(left<=mid){
+            temp.add(arr[left]);
+            left++;
         }
-         while(j<=high){
-            temp[idx++]=nums[j++];
+        while(right<=r){
+            temp.add(arr[right]);
+            right++;
         }
 
-        for(int k=low;k<=high;k++){
-            nums[k]=temp[k-low];
+        for(int i=l;i<=r;i++){
+          
+           arr[i]= temp.get(i-l);
         }
+        return count;
     }
+
 }
